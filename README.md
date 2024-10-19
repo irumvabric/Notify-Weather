@@ -54,7 +54,7 @@ api key : f2e5a934bf6e77754ad4c5c1521c0f96
 
 [console.cloud.google](https://console.cloud.google.com/)
 
-- Historique des données météo pour consulter les tendances passées
+# 4. Historique des données météo pour consulter les tendances passées
 
 => Django Modele and database for the users have  consulted : 
 
@@ -65,11 +65,11 @@ uses looked on it it will be a tendance and i will have to put it in a database 
 [MongoDB with Django](https://www.youtube.com/watch?v=oUIjHQMBdD4) Or i can replace it with another one.
 [MongoDB with Django](https://www.djongomapper.com/integrating-django-with-mongodb/) Or Read this.
  
-# 4. Widgets personnalisables pour un accès rapide sur l’écran d’accueil
+# 5. Widgets personnalisables pour un accès rapide sur l’écran d’accueil
 
 [home+widget+flutter](https://www.youtube.com/results?search_query=home+widget+flutter)
 
-# 5. Options de personnalisation pour choisir les unités de mesure (Celsius/Fahrenheit)
+# 6. Options de personnalisation pour choisir les unités de mesure (Celsius/Fahrenheit)
 
 => UI and Code
 
@@ -77,7 +77,7 @@ uses looked on it it will be a tendance and i will have to put it in a database 
 
 => Include above
 
-# 7. Prévisions à long terme (jusqu'à 14 jours) avec des graphiques interactifs
+# 8. Prévisions à long terme (jusqu'à 14 jours) avec des graphiques interactifs
 
 => No api or pay , but i can generate random data for upcoming days
 
