@@ -94,9 +94,9 @@ class HomeScreen extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                _buildWeatherCard('Wind', '28°C'),
-                _buildWeatherCard('Humidity', '28°C'),
-                _buildWeatherCard('Wind', '28°C'),
+                _buildWeatherCard('Wind', '8 Km/h'),
+                _buildWeatherCard('Humidity', '25 %'),
+                _buildWeatherCard('Precipitation', '28°C'),
               ],
             ),
 

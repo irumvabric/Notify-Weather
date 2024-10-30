@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
+// import 'package:google_sign_in/google_sign_in.dart';
 import '../services/auth.dart';
 import 'package:notifyweather/main.dart';
 
@@ -16,24 +16,6 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _passwordController = TextEditingController();
   bool _isLoading = false;
   final ctx = navigatorKey.currentContext as BuildContext;
-
-  Future<void> _handleGoogleSignIn() async {
-    setState(() => _isLoading = true);
-    try {
-      final GoogleSignIn googleSignIn = GoogleSignIn();
-      final GoogleSignInAccount? account = await googleSignIn.signIn();
-      if (account != null) {
-        // signIn(account.email, _passwordController.toString());
-        //signIn(_emailController.toString(), _passwordController.toString());
-        print("Google sign-in successful: ${account.email}");
-        Navigator.pushNamed(ctx, '/screens/Home');
-      }
-    } catch (error) {
-      print("Sign in failed: $error");
-    } finally {
-      setState(() => _isLoading = false);
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -82,12 +64,6 @@ class _LoginScreenState extends State<LoginScreen> {
                     : const Text('Login'),
               ),
               const SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: _isLoading ? null : _handleGoogleSignIn,
-                child: _isLoading
-                    ? const CircularProgressIndicator()
-                    : const Text('Sign in with Google'),
-              ),
             ],
           ),
         ),

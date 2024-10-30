@@ -16,7 +16,7 @@ Route onGeneratedRoute(RouteSettings settings) {
         return const SignUpScreen();
 
       default:
-        return const LoginScreen();
+        return const SignUpScreen();
     }
   });
 }
