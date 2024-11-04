@@ -7,7 +7,7 @@ Route onGeneratedRoute(RouteSettings settings) {
   return MaterialPageRoute(builder: (context) {
     switch (settings.name) {
       case '/screens/Home':
-        return const HomeScreen();
+        return HomeScreen();
       case '/screens/login':
         return const LoginScreen();
       case '/screens/signup':

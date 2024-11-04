@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:notifyweather/screens/map.dart';
 
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+class HomeScreen extends StatefulWidget {
+  HomeScreen({Key? key}) : super(key: key);
 
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -103,18 +109,6 @@ class HomeScreen extends StatelessWidget {
             const Spacer(),
 
             // Bottom Navigation Bar
-            Container(
-              padding: const EdgeInsets.symmetric(vertical: 20),
-              color: Colors.white,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  _buildNavItem(Icons.home, 'Home', true),
-                  _buildNavItem(Icons.map, 'Maps', false),
-                  _buildNavItem(Icons.notifications, 'Forecast', false),
-                ],
-              ),
-            ),
           ],
         ),
       ),
@@ -148,25 +142,6 @@ class HomeScreen extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-
-  Widget _buildNavItem(IconData icon, String label, bool isSelected) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Icon(
-          icon,
-          color: isSelected ? const Color(0xFF1E56A0) : Colors.grey,
-        ),
-        Text(
-          label,
-          style: TextStyle(
-            color: isSelected ? const Color(0xFF1E56A0) : Colors.grey,
-            fontSize: 12,
-          ),
-        ),
-      ],
     );
   }
 }

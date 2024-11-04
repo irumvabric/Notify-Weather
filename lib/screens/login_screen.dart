@@ -64,6 +64,10 @@ class _LoginScreenState extends State<LoginScreen> {
                     : const Text('Login'),
               ),
               const SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: () => Navigator.pushNamed(ctx, '/screens/Home'),
+                child: Text("GO to the HOme Page"),
+              )
             ],
           ),
         ),
