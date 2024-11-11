@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:weather/pages/home_screen.dart';
+import 'package:weather/pages/maps_screen.dart';
 import 'package:weather/services/auth_service.dart';
 
 void main() {
@@ -16,7 +18,8 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Flutter Django Auth'),
+      // home: const MyHomePage(title: 'Flutter Django Auth'),
+      home: const MyHomePage(title: 'Hola'),
     );
   }
 }
@@ -46,6 +49,10 @@ class _MyHomePageState extends State<MyHomePage> {
 
     if (response != null) {
       print('Login successful: $response');
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const Home_Screen()),
+      );
     } else {
       print('Login failed');
     }
