@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:weather/pages/home_screen.dart';
 import 'package:weather/services/weather_service.dart';
-import 'package:weather/ui_settings/themes.dart';
 import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -34,8 +32,6 @@ class _WeatherScreenState extends State<WeatherScreen> {
         position.latitude,
         position.longitude,
       );
-
-      print('Weather Data: $weatherData'); // Debugging statement
 
       // Save to Firestore
       await _weatherService.saveWeatherData(weatherData);
