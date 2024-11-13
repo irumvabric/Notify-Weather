@@ -1,0 +1,49 @@
+{
+  "project_info": {
+    "project_number": "652163409265",
+    "project_id": "notifyweather-b7d57",
+    "storage_bucket": "notifyweather-b7d57.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:652163409265:android:455907738c181b519142d0",
+        "android_client_info": {
+          "package_name": "com.brice.notify"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyARi-O4hl66xm0D6PULCR-x6oz-77LWYOE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:652163409265:android:ce53cd50a17176529142d0",
+        "android_client_info": {
+          "package_name": "com.example.weather"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyARi-O4hl66xm0D6PULCR-x6oz-77LWYOE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
