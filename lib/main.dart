@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:weather/pages/Profile_Screen.dart';
 import 'package:weather/pages/home_screen.dart';
 import 'package:weather/pages/login_screen.dart';
+import 'package:weather/pages/maps_screen.dart';
 import 'package:weather/pages/weatherscreen.dart';
 import 'package:weather/pages/original_screen_weather.dart';
 import 'package:weather/pages/register_screen.dart';
@@ -31,7 +33,9 @@ class MyApp extends StatelessWidget {
       initialRoute: '/home', // Set initial route to login screen
       routes: {
         '/home': (context) => Home_Screen(),
-        '/weather': (context) => const WeatherPage(),
+        '/weather': (context) => const Weather_screen(),
+        '/maps': (context) => Map_Screen(),
+        '/personalisation': (context) => Profile_Screen(),
         '/login': (context) => LoginScreen(),
         '/register': (context) => RegisterScreen(),
       },

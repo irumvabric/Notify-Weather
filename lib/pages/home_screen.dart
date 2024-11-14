@@ -22,8 +22,8 @@ class _Home_ScreenState extends State<Home_Screen> {
   }
 
   List _pages = [
-    WeatherScreen(),
-    Maps_Screen(),
+    Weather_screen(),
+    Map_Screen(),
     Forecast_Screen(),
     Profile_Screen()
   ];

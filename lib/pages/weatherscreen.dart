@@ -1,206 +1,176 @@
 import 'package:flutter/material.dart';
-import 'package:weather/pages/home_screen.dart';
-import 'package:weather/services/weather_service.dart';
-import 'package:intl/intl.dart';
+import 'package:weather/services/services_service.dart';
+import 'package:lottie/lottie.dart';
+import '../models/weather.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class WeatherScreen extends StatefulWidget {
+class Weather_screen extends StatefulWidget {
+  const Weather_screen({super.key});
+
   @override
-  _WeatherScreenState createState() => _WeatherScreenState();
+  State<Weather_screen> createState() => _WeatherPageState();
 }
 
-class _WeatherScreenState extends State<WeatherScreen> {
-  final WeatherService _weatherService = WeatherService();
-  bool _isLoading = false;
-  Map<String, dynamic>? _currentWeather;
+class _WeatherPageState extends State<Weather_screen> {
+  // get api key
+  final _weather_Service =
+      weather_service(apiKey: "f2e5a934bf6e77754ad4c5c1521c0f96");
+  Weather? _weatherData;
+  Weather? _weather;
+  TextEditingController _searchController = TextEditingController();
+  bool _isLiked = false;
+
+  Future<void> _fetchWeatherData(String cityName) async {
+    final weatherService =
+        weather_service(apiKey: 'f2e5a934bf6e77754ad4c5c1521c0f96');
+    Weather weather = await weatherService.get_weather(cityName);
+    setState(() {
+      _weatherData = weather;
+    });
+  }
+
+  // fech weather
+
+  _fetchweather() async {
+    // get city name
+    String nameCity = await _weather_Service.get_Location();
+
+    // get weather of the city
+    try {
+      final weather = await _weather_Service.get_weather(nameCity);
+      setState(() {
+        _weather = weather;
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  // weather animation
+
+  String getAnimationByCondition(String? condition) {
+    if (condition == null) return "assets/sun.json"; //Default to sunny
+
+    switch (condition.toLowerCase()) {
+      case "cloud":
+        return "assets/cloud.json";
+      case "fog":
+        return "assets/cloud.json";
+      case "rain":
+        return "assets/rain.json";
+      case "sunny":
+        return "assets/sun.json";
+      case "snow":
+        return "assets/snow.json";
+      case "shower rain":
+        return "assets/rain.json";
+      case "thunderstorm":
+        return "assets/cloud_thunder.json";
+      default:
+        return "assets/sun.json";
+    }
+  }
 
   @override
   void initState() {
     super.initState();
-    _loadWeatherData();
+    // Fetch data on startup
+    _fetchweather();
   }
 
-  Future<void> _loadWeatherData() async {
-    setState(() => _isLoading = true);
-    try {
-      // Get current location
-      final position = await _weatherService.getCurrentLocation();
-      print('Location: ${position.latitude}, ${position.longitude}');
+  void _saveWeatherData() async {
+    await FirebaseFirestore.instance.collection('weather_likes').add({
+      'location': _weatherData?.cityName,
+      'temperature': _weatherData?.temperature,
+      'liked': _isLiked,
+    });
+  }
 
-      // Get weather data
-      final weatherData = await _weatherService.getWeatherData(
-        position.latitude,
-        position.longitude,
-      );
-
-      // Save to Firestore
-      await _weatherService.saveWeatherData(weatherData);
-
-      setState(() => _currentWeather = weatherData);
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: ${e.toString()}')),
-      );
-    } finally {
-      setState(() => _isLoading = false);
-    }
+  void _toggleLike() {
+    setState(() {
+      _isLiked = !_isLiked;
+      if (_isLiked) {
+        _saveWeatherData();
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Weather App'),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.history),
-            onPressed: () => Navigator.push(
-              context,
-              MaterialPageRoute(builder: (_) => Home_Screen()),
-            ),
+        title: TextField(
+          controller: _searchController,
+          decoration: InputDecoration(
+            hintText: 'Search for a location',
+            prefixIcon: Icon(Icons.search),
           ),
-          IconButton(
-            icon: Icon(Icons.refresh),
-            onPressed: _loadWeatherData,
-          ),
-        ],
+          onSubmitted: (value) {
+            _fetchWeatherData(value);
+          },
+        ),
       ),
-      body: _isLoading
-          ? Center(child: CircularProgressIndicator())
-          : _currentWeather == null
-              ? Center(child: Text('No weather data available'))
-              : _buildWeatherDisplay(),
-    );
-  }
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // City name
+            Text(_weather?.cityName ?? "Loading city .."),
 
-  Widget _buildWeatherDisplay() {
-    final weather = _currentWeather!;
-    final temp = weather['main']['temp'].round();
-    final condition = weather['weather'][0]['main'];
-    final humidity = weather['main']['humidity'];
-    final windSpeed = weather['wind']['speed'];
+            // Animation
 
-    return RefreshIndicator(
-      onRefresh: _loadWeatherData,
-      child: SingleChildScrollView(
-        physics: AlwaysScrollableScrollPhysics(),
-        child: Padding(
-          padding: EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text(
-                weather['name'],
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
-              SizedBox(height: 20),
-              _buildWeatherIcon(weather['weather'][0]['icon']),
-              Text(
-                '$temp°C',
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
-              Text(
-                condition,
-                style: Theme.of(context).textTheme.bodySmall,
-              ),
-              SizedBox(height: 20),
-              _buildWeatherDetails(humidity, windSpeed),
-              SizedBox(height: 20),
-              _buildSavedWeatherList(),
-            ],
-          ),
+            Lottie.asset(getAnimationByCondition(_weather?.mainCondition),
+                height: 200, width: 200),
+
+            // City name
+            Text('${_weather?.temperature.round()}°C' ??
+                "Loading Temperature .."),
+
+            Text(_weather?.mainCondition ?? "Loading Condition .."),
+          ],
         ),
       ),
     );
   }
 
-  Widget _buildWeatherIcon(String iconCode) {
-    return Image.network(
-      'https://openweathermap.org/img/w/$iconCode.png',
-      scale: 0.5,
-    );
-  }
-
-  Widget _buildWeatherDetails(int humidity, double windSpeed) {
+  Widget _buildBottomSheet() {
     return Container(
       padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.black.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(10),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(color: Colors.black26, blurRadius: 10),
+        ],
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Column(
-            children: [
-              Icon(Icons.water_drop),
-              Text('Humidity'),
-              Text('$humidity%'),
-            ],
+          Text(
+            _weatherData?.cityName ?? "",
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
-          Column(
+          SizedBox(height: 8),
+          Text(
+            "${_weatherData?.temperature ?? ""}°C",
+            style: TextStyle(fontSize: 18),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Icon(Icons.wind_power),
-              Text('Wind Speed'),
-              Text('${windSpeed.toStringAsFixed(1)} m/s'),
+              IconButton(
+                icon: Icon(_isLiked ? Icons.favorite : Icons.favorite_border),
+                onPressed: _toggleLike,
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  // Add additional functionality if needed
+                },
+                child: Text("Details"),
+              ),
             ],
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildSavedWeatherList() {
-    return StreamBuilder<QuerySnapshot>(
-      stream: _weatherService.getSavedWeatherData(),
-      builder: (context, snapshot) {
-        if (snapshot.hasError) {
-          return Text('Error: ${snapshot.error}');
-        }
-
-        if (!snapshot.hasData) {
-          return CircularProgressIndicator();
-        }
-
-        final docs = snapshot.data!.docs;
-
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Recent Weather History',
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
-            SizedBox(height: 10),
-            ListView.builder(
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              itemCount: docs.length,
-              itemBuilder: (context, index) {
-                final data = docs[index].data() as Map<String, dynamic>;
-                return _buildWeatherHistoryItem(data, docs[index].id);
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  Widget _buildWeatherHistoryItem(Map<String, dynamic> data, String docId) {
-    final timestamp = (data['timestamp'] as Timestamp).toDate();
-    final formattedDate = DateFormat('MMM d, y HH:mm').format(timestamp);
-
-    return Card(
-      child: ListTile(
-        leading: _buildWeatherIcon(data['icon']),
-        title: Text(data['location_name']),
-        subtitle: Text(
-            '$formattedDate\n${data['temperature']}°C, ${data['condition']}'),
-        trailing: IconButton(
-          icon: Icon(Icons.delete),
-          onPressed: () => _weatherService.deleteWeatherData(docId),
-        ),
       ),
     );
   }

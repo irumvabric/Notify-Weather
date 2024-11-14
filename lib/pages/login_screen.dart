@@ -37,25 +37,35 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: backgroundColor,
+      resizeToAvoidBottomInset: false,
+      backgroundColor: const Color.fromARGB(255, 0, 74, 173),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(height: 60),
-            Text('Login', style: headingTextStyle),
-            SizedBox(height: 8),
-            Text('Please sign in to continue.', style: subheadingTextStyle),
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.only(top: 50.0),
+                child: const Image(
+                  image: AssetImage('assets/Notify.png'),
+                  width: 100,
+                  height: 100,
+                  fit: BoxFit.contain,
+                ),
+              ),
+            ),
+            SizedBox(height: 50),
+            Center(child: Text('Login', style: headingTextStyle)),
             SizedBox(height: 40),
             TextField(
               controller: emailController,
               decoration: InputDecoration(
                 labelText: 'Email',
                 labelStyle: inputTextStyle,
-                prefixIcon: Icon(Icons.email_outlined, color: Colors.grey),
+                // prefixIcon: Icon(Icons.email_outlined, color: Colors.grey),
                 border:
-                    OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                    OutlineInputBorder(borderRadius: BorderRadius.circular(30)),
               ),
             ),
             SizedBox(height: 20),
@@ -65,11 +75,11 @@ class LoginScreen extends StatelessWidget {
               decoration: InputDecoration(
                 labelText: 'Password',
                 labelStyle: inputTextStyle,
-                prefixIcon: Icon(Icons.lock_outline, color: Colors.grey),
-                suffixText: 'FORGOT',
+                // prefixIcon: Icon(Icons.lock_outline, color: Colors.grey),
+                // suffixText: 'FORGOT',
                 suffixStyle: TextStyle(color: primaryColor),
                 border:
-                    OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                    OutlineInputBorder(borderRadius: BorderRadius.circular(30)),
               ),
             ),
             SizedBox(height: 40),
@@ -79,7 +89,7 @@ class LoginScreen extends StatelessWidget {
                 backgroundColor: primaryColor,
                 padding: EdgeInsets.symmetric(vertical: 15),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(30),
                 ),
               ),
               child: Center(

@@ -5,21 +5,21 @@ const primaryColor = Color.fromARGB(255, 38, 201, 255); // Orange color
 const backgroundColor = Colors.white;
 
 final headingTextStyle = TextStyle(
-  fontSize: 26,
+  fontSize: 30,
   fontWeight: FontWeight.bold,
-  color: Colors.black,
+  color: Colors.white,
 );
 
 final headline2TextStyle = TextStyle(
   fontSize: 26,
   fontWeight: FontWeight.bold,
-  color: Colors.black,
+  color: Colors.white,
 );
 
 final headline5TextStyle = TextStyle(
   fontSize: 26,
   fontWeight: FontWeight.bold,
-  color: Colors.black,
+  color: Colors.white,
 );
 
 final subheadingTextStyle = TextStyle(
@@ -29,7 +29,7 @@ final subheadingTextStyle = TextStyle(
 
 final inputTextStyle = TextStyle(
   fontSize: 16,
-  color: Colors.black,
+  color: Colors.white,
 );
 
 final buttonTextStyle = TextStyle(

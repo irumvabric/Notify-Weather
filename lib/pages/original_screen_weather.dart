@@ -74,7 +74,11 @@ class _WeatherPageState extends State<WeatherPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             // City name
-            Text(_weather?.cityName ?? "Loading city .."),
+            Text(_weather?.cityName ?? "Loading city ..",
+              style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 20,
+              ),),
 
             // Animation
 

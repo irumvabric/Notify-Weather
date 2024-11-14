@@ -46,29 +46,35 @@ class RegisterScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: backgroundColor,
+      backgroundColor: const Color.fromARGB(255, 0, 74, 173),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(20.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: 60),
-              IconButton(
-                icon: Icon(Icons.arrow_back, color: Colors.black),
-                onPressed: () => Navigator.pop(context),
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 50.0),
+                  child: const Image(
+                    image: AssetImage('assets/Notify.png'),
+                    width: 100,
+                    height: 100,
+                    fit: BoxFit.contain,
+                  ),
+                ),
               ),
-              SizedBox(height: 20),
-              Text('Create Account', style: headingTextStyle),
+              SizedBox(height: 80),
+              Center(child: Text('Create Account', style: headingTextStyle)),
               SizedBox(height: 40),
               TextField(
                 controller: nameController,
                 decoration: InputDecoration(
                   labelText: 'Full Name',
                   labelStyle: inputTextStyle,
-                  prefixIcon: Icon(Icons.person_outline, color: Colors.grey),
+                  // prefixIcon: Icon(Icons.person_outline, color: Colors.grey),
                   border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10)),
+                      borderRadius: BorderRadius.circular(30)),
                 ),
               ),
               SizedBox(height: 20),
@@ -77,9 +83,9 @@ class RegisterScreen extends StatelessWidget {
                 decoration: InputDecoration(
                   labelText: 'Email',
                   labelStyle: inputTextStyle,
-                  prefixIcon: Icon(Icons.email_outlined, color: Colors.grey),
+                  // prefixIcon: Icon(Icons.email_outlined, color: Colors.grey),
                   border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10)),
+                      borderRadius: BorderRadius.circular(30)),
                 ),
               ),
               SizedBox(height: 20),
@@ -89,9 +95,9 @@ class RegisterScreen extends StatelessWidget {
                 decoration: InputDecoration(
                   labelText: 'Password',
                   labelStyle: inputTextStyle,
-                  prefixIcon: Icon(Icons.lock_outline, color: Colors.grey),
+                  // prefixIcon: Icon(Icons.lock_outline, color: Colors.grey),
                   border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10)),
+                      borderRadius: BorderRadius.circular(30)),
                 ),
               ),
               SizedBox(height: 20),
@@ -101,9 +107,9 @@ class RegisterScreen extends StatelessWidget {
                 decoration: InputDecoration(
                   labelText: 'Confirm Password',
                   labelStyle: inputTextStyle,
-                  prefixIcon: Icon(Icons.lock_outline, color: Colors.grey),
+                  // prefixIcon: Icon(Icons.lock_outline, color: Colors.grey),
                   border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10)),
+                      borderRadius: BorderRadius.circular(30)),
                 ),
               ),
               SizedBox(height: 40),
@@ -113,7 +119,7 @@ class RegisterScreen extends StatelessWidget {
                   backgroundColor: primaryColor,
                   padding: EdgeInsets.symmetric(vertical: 15),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(30),
                   ),
                 ),
                 child: Center(

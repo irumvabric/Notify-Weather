@@ -43,6 +43,9 @@ dependencies:
   cloud_firestore: ^5.4.5
   intl: ^0.19.0
   lottie: ^3.1.3
+  fl_chart: ^0.69.0
+  glance: ^0.5.0
+  home_widget: ^0.7.0
 
 dev_dependencies:
   flutter_test:
@@ -65,6 +68,7 @@ flutter:
   # the material Icons class.
   uses-material-design: true
   assets:
+    - assets/Notify.png
     - assets/cloud_thunder.json
     - assets/cloud.json
     - assets/sun.json
