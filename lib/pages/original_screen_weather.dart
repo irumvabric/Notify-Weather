@@ -25,7 +25,7 @@ class _WeatherPageState extends State<WeatherPage> {
 
     // get weather of the city
     try {
-      final weather = await _weather_Service.get_weather(nameCity);
+      final weather = await _weather_Service.get_weather(nameCity, "metric");
       setState(() {
         _weather = weather;
       });
@@ -74,11 +74,13 @@ class _WeatherPageState extends State<WeatherPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             // City name
-            Text(_weather?.cityName ?? "Loading city ..",
+            Text(
+              _weather?.cityName ?? "Loading city ..",
               style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 20,
-              ),),
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+              ),
+            ),
 
             // Animation
 

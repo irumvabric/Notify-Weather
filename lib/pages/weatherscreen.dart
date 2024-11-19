@@ -23,7 +23,7 @@ class _WeatherPageState extends State<Weather_screen> {
   Future<void> _fetchWeatherData(String cityName) async {
     final weatherService =
         weather_service(apiKey: 'f2e5a934bf6e77754ad4c5c1521c0f96');
-    Weather weather = await weatherService.get_weather(cityName);
+    Weather weather = await weatherService.get_weather(cityName, "metric");
     setState(() {
       _weatherData = weather;
     });
@@ -37,7 +37,7 @@ class _WeatherPageState extends State<Weather_screen> {
 
     // get weather of the city
     try {
-      final weather = await _weather_Service.get_weather(nameCity);
+      final weather = await _weather_Service.get_weather(nameCity, "metric");
       setState(() {
         _weather = weather;
       });

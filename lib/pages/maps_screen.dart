@@ -4,6 +4,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:weather/services/services_service.dart';
 import '../models/weather.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:weather/pages/details_screen.dart';
 
 class Map_Screen extends StatefulWidget {
   @override
@@ -36,7 +37,7 @@ class _MapScreenState extends State<Map_Screen> {
   Future<void> _fetchWeatherData(String cityName) async {
     final weatherService =
         weather_service(apiKey: 'f2e5a934bf6e77754ad4c5c1521c0f96');
-    Weather weather = await weatherService.get_weather(cityName);
+    Weather weather = await weatherService.get_weather(cityName, "metric");
     setState(() {
       _weatherData = weather;
     });
@@ -141,9 +142,7 @@ class _MapScreenState extends State<Map_Screen> {
                 onPressed: _toggleLike,
               ),
               ElevatedButton(
-                onPressed: () {
-                  // Add additional functionality if needed
-                },
+                onPressed: () {},
                 child: Text("Details"),
               ),
             ],

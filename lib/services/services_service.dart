@@ -9,13 +9,16 @@ import 'package:geolocator/geolocator.dart';
 class weather_service {
   static const String BASE_URL =
       "https://api.openweathermap.org/data/2.5/weather";
+  static const String FORECAST_URL =
+      "https://api.openweathermap.org/data/2.5/forecast/daily";
+
   final String apiKey;
 
   weather_service({required this.apiKey});
 
-  Future<Weather> get_weather(String cityname) async {
+  Future<Weather> get_weather(String cityname, String temp) async {
     final response = await http
-        .get(Uri.parse("$BASE_URL?q=$cityname&appid=$apiKey&units=metric"));
+        .get(Uri.parse("$BASE_URL?q=$cityname&appid=$apiKey&units=$temp"));
 
     if (response.statusCode == 200) {
       return Weather.fromJson(jsonDecode(response.body));
@@ -47,5 +50,38 @@ class weather_service {
     String? city = placemarks[0].locality;
 
     return city ?? "";
+  }
+
+  Future<List<Placemark>> get_Location_lat_long() async {
+    // Get allow location permission
+    LocationPermission permission = await Geolocator.checkPermission();
+
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+    }
+
+    // Fetch current location
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+    //return position.toString();
+
+    List<Placemark> placemarks =
+        await placemarkFromCoordinates(position.latitude, position.longitude);
+    return placemarks;
+  }
+
+  Future<List<Weather>> getForecast(
+      double latitude, double longitude, int days, String temp) async {
+    final response = await http.get(Uri.parse(
+        "$FORECAST_URL?lat=$latitude&lon=$longitude&cnt=$days&appid=$apiKey&units=$temp"));
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      return (data['list'] as List)
+          .map((json) => Weather.fromJson(json))
+          .toList();
+    } else {
+      throw Exception('Failed to load forecast');
+    }
   }
 }
