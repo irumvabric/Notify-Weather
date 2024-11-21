@@ -1,271 +1,208 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import '../models/weather.dart';
 import 'package:weather/services/services_service.dart';
 
-class WeatherDetailsView extends StatefulWidget {
-  // final Weather weatherData;
-  // final List<Weather> forecast;
-
-  const WeatherDetailsView({super.key});
+class WeatherDetailsScreen extends StatefulWidget {
+  const WeatherDetailsScreen({super.key});
 
   @override
-  State<WeatherDetailsView> createState() => _WeatherDetailsViewState();
+  State<WeatherDetailsScreen> createState() => _WeatherDetailsScreenState();
 }
 
-class _WeatherDetailsViewState extends State<WeatherDetailsView> {
-  final _weather_Service_current =
-      weather_service(apiKey: "f2e5a934bf6e77754ad4c5c1521c0f96");
-  final _weather_Service_forecast =
-      weather_service(apiKey: "f85ba90750234215936103831243110");
-  late Future<Map<String, dynamic>> weatherForecast;
+class _WeatherDetailsScreenState extends State<WeatherDetailsScreen> {
+  final weatherService =
+      weather_service(apiKey: 'f2e5a934bf6e77754ad4c5c1521c0f96');
+  Weather? currentWeather;
+  List<dynamic>? forecastData;
+  bool _isCelsius = true; // Temperature unit state
+  bool _isLoading = false;
+  String? _error;
+  TextEditingController _searchController = TextEditingController();
 
-  List<Weather> _forecast = [];
-  bool _isLoading = true;
-  String _error = '';
-
-  @override
-  void initState() {
-    super.initState();
-    weatherForecast =
-        _weather_Service_current.fetchWeatherForecast(-3.38193, 29.36142);
+  // Toggle between Celsius and Fahrenheit
+  void _toggleTemperatureUnit() {
+    setState(() {
+      _isCelsius = !_isCelsius;
+      if (currentWeather != null) {
+        _fetchWeather(currentWeather!.cityName);
+      }
+    });
   }
 
-  IconData _getWeatherIcon(String condition) {
-    // Customize based on your weather condition strings
-    switch (condition.toLowerCase()) {
-      case 'clear':
-        return Icons.wb_sunny;
-      case 'cloudy':
-        return Icons.cloud;
-      case 'rainy':
-        return Icons.water_drop;
-      case 'storm':
-        return Icons.thunderstorm;
-      default:
-        return Icons.cloud;
+  // Fetch both current weather and forecast
+  Future<void> _fetchWeather(String cityName) async {
+    setState(() {
+      _isLoading = true;
+      _error = null;
+    });
+
+    try {
+      final current = await weatherService.get_weather(
+          cityName, _isCelsius ? "metric" : "imperial");
+      final forecast = await weatherService.fetchWeatherForecastUnits(
+          23, 23, _isCelsius ? "metric" : "imperial");
+
+      setState(() {
+        currentWeather = current;
+        forecastData = forecast['list'];
+        _isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        _error = e.toString();
+        _isLoading = false;
+      });
     }
   }
 
   @override
-  Widget build(BuildContext context) {
-    // Mock data for the graph - replace with actual historical data
-    final List<FlSpot> spots = [
-      FlSpot(0, 700),
-      FlSpot(1, 500),
-      FlSpot(2, 600),
-      FlSpot(3, 800),
-      FlSpot(4, 850),
-      FlSpot(5, 600),
-      FlSpot(6, 650),
-      FlSpot(7, 700),
-      FlSpot(8, 900),
-    ];
+  void initState() {
+    super.initState();
+    _fetchWeather("Bujumbura"); // Default city
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Weather Details'),
-        backgroundColor: Colors.blue,
-        elevation: 0,
+        title: TextField(
+          controller: _searchController,
+          decoration: InputDecoration(
+            hintText: 'Search for a city',
+            prefixIcon: Icon(Icons.search),
+          ),
+          onSubmitted: (value) {
+            _fetchWeather(value);
+          },
+        ),
+        actions: [
+          IconButton(
+            icon: Text(_isCelsius ? '°C' : '°F',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+            onPressed: _toggleTemperatureUnit,
+          ),
+        ],
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            // Current Weather Card
-            Container(
-              padding: EdgeInsets.all(16),
-              margin: EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.blue,
-                borderRadius: BorderRadius.circular(12),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black26,
-                    blurRadius: 10,
+      body: _isLoading
+          ? Center(child: CircularProgressIndicator())
+          : _error != null
+              ? Center(
+                  child: Text('Error: $_error',
+                      style: TextStyle(color: Colors.red)))
+              : currentWeather == null
+                  ? Center(child: Text('No data available'))
+                  : SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          _buildCurrentWeatherCard(),
+                          _buildForecastList(),
+                        ],
+                      ),
+                    ),
+    );
+  }
+
+  // Current Weather Card
+  Widget _buildCurrentWeatherCard() {
+    return Container(
+      padding: EdgeInsets.all(16),
+      margin: EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.blue,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black26,
+            blurRadius: 10,
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            currentWeather!.cityName,
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+          ),
+          SizedBox(height: 16),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  Icon(Icons.thermostat, color: Colors.white, size: 32),
+                  SizedBox(width: 8),
+                  Text(
+                    '${currentWeather!.temperature.toStringAsFixed(1)} ${_isCelsius ? "°C" : "°F"}',
+                    style: TextStyle(fontSize: 32, color: Colors.white),
                   ),
                 ],
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Text(
-                    "widget.weatherData.cityName",
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                  SizedBox(height: 16),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.thermostat,
-                            color: Colors.white,
-                            size: 32,
-                          ),
-                          SizedBox(width: 8),
-                          Text(
-                            // '${widget.weatherData.temperature}°C',
-                            '20 °C',
-                            style: TextStyle(
-                              fontSize: 32,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ],
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Row(
-                            children: [
-                              Icon(
-                                Icons.water_drop,
-                                color: Colors.white,
-                                size: 16,
-                              ),
-                              SizedBox(width: 4),
-                              Text(
-                                '50 %',
-                                // '${widget.weatherData.humidity}%',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 8),
-                          Row(
-                            children: [
-                              Icon(
-                                Icons.air,
-                                color: Colors.white,
-                                size: 16,
-                              ),
-                              SizedBox(width: 4),
-                              Text(
-                                // '${widget.weatherData.windspeed} km/h',
-                                '20 km/h',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
+                      Icon(Icons.water_drop, color: Colors.white, size: 16),
+                      SizedBox(width: 4),
+                      Text('${currentWeather!.humidity}%',
+                          style: TextStyle(color: Colors.white)),
+                    ],
+                  ),
+                  SizedBox(height: 8),
+                  Row(
+                    children: [
+                      Icon(Icons.air, color: Colors.white, size: 16),
+                      SizedBox(width: 4),
+                      Text('${currentWeather!.windspeed} km/h',
+                          style: TextStyle(color: Colors.white)),
                     ],
                   ),
                 ],
               ),
-            ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
 
-            // Historical Weather Graph
-            Container(
-              padding: EdgeInsets.all(16),
-              margin: EdgeInsets.symmetric(horizontal: 16),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black12,
-                    blurRadius: 10,
-                  ),
-                ],
-              ),
-              height: 300,
-              child: LineChart(
-                LineChartData(
-                  gridData: FlGridData(show: true),
-                  titlesData: FlTitlesData(
-                    leftTitles: AxisTitles(
-                      sideTitles: SideTitles(showTitles: true),
-                    ),
-                    bottomTitles: AxisTitles(
-                      sideTitles: SideTitles(
-                        showTitles: true,
-                        getTitlesWidget: (value, meta) {
-                          return Text(
-                            '${(2011 + value.toInt()).toString()}',
-                            style: TextStyle(fontSize: 10),
-                          );
-                        },
-                      ),
-                    ),
-                  ),
-                  borderData: FlBorderData(show: true),
-                  lineBarsData: [
-                    LineChartBarData(
-                      spots: spots,
-                      isCurved: true,
-                      color: Colors.blue,
-                      barWidth: 2,
-                      dotData: FlDotData(show: true),
-                    ),
-                  ],
-                ),
+  // Forecast List
+  Widget _buildForecastList() {
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 16),
+      child: ListView.builder(
+        physics: const NeverScrollableScrollPhysics(),
+        shrinkWrap: true,
+        itemCount: forecastData?.length ?? 0,
+        itemBuilder: (context, index) {
+          final forecast = forecastData![index];
+          final dateTime = DateTime.parse(forecast['dt_txt']);
+          final temperature = forecast['main']['temp'];
+          final description = forecast['weather'][0]['description'];
+          final icon = forecast['weather'][0]['icon'];
+
+          return Card(
+            color: Colors.blue[100],
+            margin: EdgeInsets.symmetric(vertical: 8),
+            child: ListTile(
+              leading: Image.network(
+                  "http://openweathermap.org/img/wn/$icon@2x.png"),
+              title:
+                  Text('${dateTime.day}/${dateTime.month} ${dateTime.hour}:00'),
+              subtitle: Text(description),
+              trailing: Text(
+                '${temperature.toStringAsFixed(1)} ${_isCelsius ? "°C" : "°F"}',
+                style: TextStyle(fontWeight: FontWeight.bold),
               ),
             ),
-
-            SizedBox(
-              height: 20,
-            ),
-
-            FutureBuilder<Map<String, dynamic>>(
-              future: weatherForecast,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
-                } else if (snapshot.hasError) {
-                  return Center(
-                    child: Text("Error: ${snapshot.error}"),
-                  );
-                } else if (snapshot.hasData) {
-                  final forecastList = snapshot.data!['list'] as List;
-
-                  return ListView.builder(
-                    itemCount: forecastList.length,
-                    itemBuilder: (context, index) {
-                      final forecast = forecastList[index];
-                      final dateTime = DateTime.parse(forecast['dt_txt']);
-                      final temperature = forecast['main']['temp'];
-                      final humidity = forecast['main']['humidity'];
-                      final description = forecast['weather'][0]['description'];
-                      final icon = forecast['weather'][0]['icon'];
-
-                      return Card(
-                        margin:
-                            EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                        child: ListTile(
-                          leading: Image.network(
-                              "http://openweathermap.org/img/wn/$icon@2x.png"),
-                          title: Text(
-                            "${dateTime.day}/${dateTime.month} ${dateTime.hour}:00",
-                          ),
-                          subtitle: Text(description),
-                          trailing: Column(children: [
-                            Text("${temperature.toStringAsFixed(1)}°C"),
-                            Text("${humidity.toStringAsFixed(1)} %"),
-                          ]),
-                        ),
-                      );
-                    },
-                  );
-                }
-                return Container();
-              },
-            ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }

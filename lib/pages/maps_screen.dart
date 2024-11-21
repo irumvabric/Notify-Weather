@@ -70,7 +70,7 @@ class _MapScreenState extends State<Map_Screen> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => WeatherDetailsView(
+          builder: (context) => WeatherDetailsScreen(
               // Replace with actual forecast data if needed
               ),
         ),

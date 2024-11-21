@@ -142,4 +142,19 @@ class weather_service {
       throw Exception("Failed to load weather data");
     }
   }
+
+  Future<Map<String, dynamic>> fetchWeatherForecastUnits(
+      double lat, double lon, String units) async {
+    const String apiKey = "f2e5a934bf6e77754ad4c5c1521c0f96";
+    final url = Uri.parse(
+        "https://api.openweathermap.org/data/2.5/forecast?lat=$lat&lon=$lon&appid=$apiKey&units=$units");
+
+    final response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      return json.decode(response.body);
+    } else {
+      throw Exception("Failed to load weather data");
+    }
+  }
 }

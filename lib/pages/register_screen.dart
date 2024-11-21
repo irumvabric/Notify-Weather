@@ -70,7 +70,7 @@ class RegisterScreen extends StatelessWidget {
               TextField(
                 controller: nameController,
                 decoration: InputDecoration(
-                  labelText: 'Full Name',
+                  labelText: 'Name',
                   labelStyle: inputTextStyle,
                   // prefixIcon: Icon(Icons.person_outline, color: Colors.grey),
                   border: OutlineInputBorder(

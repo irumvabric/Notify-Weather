@@ -61,9 +61,11 @@ class LoginScreen extends StatelessWidget {
             TextField(
               controller: emailController,
               decoration: InputDecoration(
+                fillColor: Colors.white,
                 labelText: 'Email',
-                labelStyle: inputTextStyle,
+                labelStyle: TextStyle(color: Colors.white),
                 // prefixIcon: Icon(Icons.email_outlined, color: Colors.grey),
+
                 border:
                     OutlineInputBorder(borderRadius: BorderRadius.circular(30)),
               ),
@@ -101,7 +103,8 @@ class LoginScreen extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text("Don't have an account?", style: subheadingTextStyle),
+                  Text("Don't have an account?",
+                      style: TextStyle(color: Colors.white)),
                   TextButton(
                     onPressed: () {
                       Navigator.pushNamed(context, '/register');

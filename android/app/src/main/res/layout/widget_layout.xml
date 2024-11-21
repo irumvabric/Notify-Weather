@@ -10,7 +10,7 @@
         android:id="@+id/widget_city"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="City Name"
+        android:text="Bujumbura"
         android:textColor="#FFFFFF"
         android:textSize="18sp" />
     

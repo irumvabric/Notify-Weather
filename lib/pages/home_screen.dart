@@ -23,10 +23,9 @@ class _Home_ScreenState extends State<Home_Screen> {
   }
 
   List _pages = [
-    Weather_screen(),
+    WeatherScreen(),
     Map_Screen(),
-    WeatherDetailsView(),
-    Profile_Screen()
+    WeatherDetailsScreen(),
   ];
 
   @override
@@ -41,8 +40,6 @@ class _Home_ScreenState extends State<Home_Screen> {
               BottomNavigationBarItem(icon: Icon(Icons.map), label: "Map"),
               BottomNavigationBarItem(
                   icon: Icon(Icons.history), label: "Forecast"),
-              BottomNavigationBarItem(
-                  icon: Icon(Icons.settings), label: "Personalisation"),
             ],
             currentIndex: _selectIndex,
             onTap: _navigator),
