@@ -214,6 +214,10 @@ class _WeatherDetailsViewState extends State<WeatherDetailsView> {
               ),
             ),
 
+            SizedBox(
+              height: 20,
+            ),
+
             FutureBuilder<Map<String, dynamic>>(
               future: weatherForecast,
               builder: (context, snapshot) {
