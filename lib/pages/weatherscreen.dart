@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:weather/services/services_service.dart';
+import 'package:weather/pages/history_screen.dart';
 import 'package:lottie/lottie.dart';
 import '../models/weather.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -72,6 +73,7 @@ class _WeatherPageState extends State<WeatherScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: TextField(
           controller: _searchController,
@@ -149,87 +151,93 @@ class WeatherWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [
-            Color(0xFF1E4289),
-            Color(0xFF4B7BF5),
-          ],
-        ),
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          // City Name
-          Text(
-            weather.cityName,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
+    return Column(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            gradient: const LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Color(0xFF1E4289),
+                Color(0xFF4B7BF5),
+              ],
             ),
+            borderRadius: BorderRadius.circular(20),
           ),
-          const SizedBox(height: 8),
-
-          // Temperature
-          Text(
-            '${weather.temperature.toStringAsFixed(1)} ${isCelsius ? "°C" : "°F"}',
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 56,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 8),
-
-          // Weather Icon
-          Image.network(
-            'https://openweathermap.org/img/wn/${weather.weatherIcon}@2x.png',
-            width: 80,
-            height: 80,
-          ),
-          const SizedBox(height: 16),
-
-          // Additional Weather Details
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              // Wind Speed
-              Column(
-                children: [
-                  const Icon(Icons.air, color: Colors.white, size: 32),
-                  Text(
-                    '${weather.windspeed.toStringAsFixed(1)} km/h',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 14,
-                    ),
-                  ),
-                ],
+              // City Name
+              Text(
+                weather.cityName,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
+              const SizedBox(height: 8),
 
-              // Humidity
-              Column(
+              // Temperature
+              Text(
+                '${weather.temperature.toStringAsFixed(1)} ${isCelsius ? "°C" : "°F"}',
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 56,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 8),
+
+              // Weather Icon
+              Image.network(
+                'https://openweathermap.org/img/wn/${weather.weatherIcon}@2x.png',
+                width: 80,
+                height: 80,
+              ),
+              const SizedBox(height: 16),
+
+              // Additional Weather Details
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  const Icon(Icons.water_drop, color: Colors.white, size: 32),
-                  Text(
-                    '${weather.humidity}%',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 14,
-                    ),
+                  // Wind Speed
+                  Column(
+                    children: [
+                      const Icon(Icons.air, color: Colors.white, size: 32),
+                      Text(
+                        '${weather.windspeed.toStringAsFixed(1)} km/h',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  // Humidity
+                  Column(
+                    children: [
+                      const Icon(Icons.water_drop,
+                          color: Colors.white, size: 32),
+                      Text(
+                        '${weather.humidity}%',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
             ],
           ),
-        ],
-      ),
+        ),
+        Expanded(child: WeatherHistoryWidget()),
+      ],
     );
   }
 }

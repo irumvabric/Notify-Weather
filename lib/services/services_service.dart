@@ -4,6 +4,7 @@ import 'package:geocoding/geocoding.dart';
 import 'package:http/http.dart' as http;
 import '../models/weather.dart';
 import '../models/model_forecast.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import 'package:geolocator/geolocator.dart';
 
@@ -25,6 +26,23 @@ class weather_service {
       return Weather.fromJson(jsonDecode(response.body));
     } else {
       throw Exception('Failed to load weather');
+    }
+  }
+
+  Future<Weather> get_weather_lat_long(
+      String lat, String lon, String units) async {
+    try {
+      final response = await http.get(
+        Uri.parse('$BASE_URL?lat=$lat&lon=$lon&appid=$apiKey&units=$units'),
+      );
+
+      if (response.statusCode == 200) {
+        return Weather.fromJson(jsonDecode(response.body));
+      } else {
+        throw Exception('Error: ${response.statusCode} - ${response.body}');
+      }
+    } catch (e) {
+      throw Exception('Failed to fetch weather data: $e');
     }
   }
 

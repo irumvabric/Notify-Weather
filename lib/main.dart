@@ -76,14 +76,13 @@ class MyApp extends StatelessWidget {
       theme: MyTheme.light, // Light theme
       darkTheme: MyTheme.dark, // Dark theme
       themeMode: ThemeMode.light, // Default theme mode
-      initialRoute: '/home', // Set initial route to login screen
+      initialRoute: '/login', // Set initial route to login screen
       routes: {
         '/home': (context) => Home_Screen(),
         '/details': (context) => WeatherDetailsScreen(),
         '/forecast': (context) => WeatherForecastScreen(),
         '/weather': (context) => const WeatherScreen(),
-        '/maps': (context) => Map_Screen(),
-        '/personalisation': (context) => Profile_Screen(),
+        '/maps': (context) => MapScreen(),
         '/login': (context) => LoginScreen(),
         '/register': (context) => RegisterScreen(),
       },
