@@ -76,7 +76,7 @@ class MyApp extends StatelessWidget {
       theme: MyTheme.light, // Light theme
       darkTheme: MyTheme.dark, // Dark theme
       themeMode: ThemeMode.light, // Default theme mode
-      initialRoute: '/forecast', // Set initial route to login screen
+      initialRoute: '/details', // Set initial route to login screen
       routes: {
         '/home': (context) => Home_Screen(),
         '/details': (context) => WeatherDetailsView(),

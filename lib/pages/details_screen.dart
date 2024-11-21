@@ -29,28 +29,8 @@ class _WeatherDetailsViewState extends State<WeatherDetailsView> {
   @override
   void initState() {
     super.initState();
-    _loadForecastData();
-  }
-
-  Future<void> _loadForecastData() async {
-    try {
-      // Replace with your actual latitude and longitude
-      final forecast = await _weather_Service_forecast.getForecast(
-          40.7128, // Example latitude (New York)
-          -74.0060, // Example longitude
-          5,
-          'celsius');
-
-      setState(() {
-        // _forecast = forecast;
-        _isLoading = false;
-      });
-    } catch (e) {
-      setState(() {
-        _error = e.toString();
-        _isLoading = false;
-      });
-    }
+    weatherForecast =
+        _weather_Service_current.fetchWeatherForecast(-3.38193, 29.36142);
   }
 
   IconData _getWeatherIcon(String condition) {

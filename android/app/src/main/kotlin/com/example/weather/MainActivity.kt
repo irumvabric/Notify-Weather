@@ -8,6 +8,6 @@ class MainActivity: FlutterActivity() {
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
         // Perform any additional initialization here, if necessary
-//        GeneratedPluginRegistrant.registerWith(flutterEngine)
+//      GeneratedPluginRegistrant.registerWith(flutterEngine)
     }
 }
