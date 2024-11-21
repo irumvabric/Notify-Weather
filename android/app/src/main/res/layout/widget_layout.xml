@@ -1,23 +1,30 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@android:color/black"
-    android:padding="16dp">
-
+    android:padding="16dp"
+    android:background="#1E4289">
+    
     <TextView
-        android:id="@+id/weather_city"
+        android:id="@+id/widget_city"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="City Name"
-        android:textSize="18sp"
-        android:textColor="@android:color/white" />
-
+        android:textColor="#FFFFFF"
+        android:textSize="18sp" />
+    
     <TextView
-        android:id="@+id/weather_temp"
+        android:id="@+id/widget_temp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Temp: 20°C"
-        android:textSize="16sp"
-        android:textColor="@android:color/white" />
+        android:text="25°C"
+        android:textColor="#FFFFFF"
+        android:textSize="56sp" />
+    
+    <ImageView
+        android:id="@+id/widget_icon"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:src="@drawable/launch_background" />
 </LinearLayout>

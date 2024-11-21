@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:geocoding/geocoding.dart';
 import 'package:http/http.dart' as http;
 import '../models/weather.dart';
+import '../models/model_forecast.dart';
 
 import 'package:geolocator/geolocator.dart';
 
@@ -10,7 +11,7 @@ class weather_service {
   static const String BASE_URL =
       "https://api.openweathermap.org/data/2.5/weather";
   static const String FORECAST_URL =
-      "https://api.openweathermap.org/data/2.5/forecast/daily";
+      "http://api.weatherapi.com/v1/forecast.json?";
 
   final String apiKey;
 
@@ -70,18 +71,75 @@ class weather_service {
     return placemarks;
   }
 
-  Future<List<Weather>> getForecast(
+  // Future<Weather> getWeatherByName(String cityName,
+  //     {String countryCode = ""}) async {
+  //   final query = countryCode.isNotEmpty ? "$cityName,$countryCode" : cityName;
+  //   final response = await http
+  //       .get(Uri.parse("$BASE_URL?q=$query&appid=$apiKey&units=metric"));
+
+  //   if (response.statusCode == 200) {
+  //     return Weather.fromJson(jsonDecode(response.body));
+  //   } else {
+  //     throw Exception('Failed to load weather');
+  //   }
+  // }
+
+  // Future<Weather> getWeatherByCoordinates(
+  //     double latitude, double longitude) async {
+  //   final response = await http.get(Uri.parse(
+  //       "$BASE_URL?lat=$latitude&lon=$longitude&appid=$apiKey&units=metric"));
+
+  //   if (response.statusCode == 200) {
+  //     return Weather.fromJson(jsonDecode(response.body));
+  //   } else {
+  //     throw Exception('Failed to load weather');
+  //   }
+  // }
+
+  // Future<List<FlSpot>> getHistoricalData(
+  //     double latitude, double longitude, int days, String temp) async {
+  //   final response = await http.get(Uri.parse(
+  //       "https://api.openweathermap.org/data/2.5/onecall/timemachine"
+  //       "?lat=$latitude&lon=$longitude&dt=${DateTime.now().subtract(Duration(days: days)).millisecondsSinceEpoch ~/ 1000}"
+  //       "&appid=$apiKey&units=$temp"));
+
+  //   if (response.statusCode == 200) {
+  //     final data = jsonDecode(response.body);
+  //     return (data['hourly'] as List)
+  //         .asMap()
+  //         .entries
+  //         .map((entry) => FlSpot(entry.key.toDouble(), entry.value['temp']))
+  //         .toList();
+  //   } else {
+  //     throw Exception('Failed to load historical data');
+  //   }
+  // }
+
+  Future<WeatherResponse> getForecast(
       double latitude, double longitude, int days, String temp) async {
     final response = await http.get(Uri.parse(
-        "$FORECAST_URL?lat=$latitude&lon=$longitude&cnt=$days&appid=$apiKey&units=$temp"));
+        "$FORECAST_URL?key=$apiKey&q=$latitude,$longitude&days=$days"));
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      return (data['list'] as List)
-          .map((json) => Weather.fromJson(json))
-          .toList();
+      return WeatherResponse.fromJson(data);
     } else {
       throw Exception('Failed to load forecast');
+    }
+  }
+
+  Future<Map<String, dynamic>> fetchWeatherForecast(
+      double lat, double lon) async {
+    const String apiKey = "f2e5a934bf6e77754ad4c5c1521c0f96";
+    final url = Uri.parse(
+        "https://api.openweathermap.org/data/2.5/forecast?lat=$lat&lon=$lon&appid=$apiKey&units=metric");
+
+    final response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      return json.decode(response.body);
+    } else {
+      throw Exception("Failed to load weather data");
     }
   }
 }

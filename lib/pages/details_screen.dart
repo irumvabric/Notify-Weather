@@ -1,16 +1,73 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import '../models/weather.dart';
+import 'package:weather/services/services_service.dart';
 
-class WeatherDetailsView extends StatelessWidget {
-  final Weather weatherData;
-  final List<Weather> forecast;
+class WeatherDetailsView extends StatefulWidget {
+  // final Weather weatherData;
+  // final List<Weather> forecast;
 
-  const WeatherDetailsView({
-    Key? key,
-    required this.weatherData,
-    required this.forecast,
-  }) : super(key: key);
+  const WeatherDetailsView({super.key});
+
+  @override
+  State<WeatherDetailsView> createState() => _WeatherDetailsViewState();
+}
+
+class _WeatherDetailsViewState extends State<WeatherDetailsView> {
+  final _weather_Service_current =
+      weather_service(apiKey: "f2e5a934bf6e77754ad4c5c1521c0f96");
+  final _weather_Service_forecast =
+      weather_service(apiKey: "f85ba90750234215936103831243110");
+  late Future<Map<String, dynamic>> weatherForecast;
+
+  List<Weather> _forecast = [];
+  bool _isLoading = true;
+  String _error = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _loadForecastData();
+  }
+
+  Future<void> _loadForecastData() async {
+    try {
+      // Replace with your actual latitude and longitude
+      final forecast = await _weather_Service_forecast.getForecast(
+          40.7128, // Example latitude (New York)
+          -74.0060, // Example longitude
+          5,
+          'celsius');
+
+      setState(() {
+        // _forecast = forecast;
+        _isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        _error = e.toString();
+        _isLoading = false;
+      });
+    }
+  }
+
+  IconData _getWeatherIcon(String condition) {
+    // Customize based on your weather condition strings
+    switch (condition.toLowerCase()) {
+      case 'clear':
+        return Icons.wb_sunny;
+      case 'cloudy':
+        return Icons.cloud;
+      case 'rainy':
+        return Icons.water_drop;
+      case 'storm':
+        return Icons.thunderstorm;
+      default:
+        return Icons.cloud;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +111,7 @@ class WeatherDetailsView extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    weatherData.cityName,
+                    "widget.weatherData.cityName",
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
@@ -74,7 +131,8 @@ class WeatherDetailsView extends StatelessWidget {
                           ),
                           SizedBox(width: 8),
                           Text(
-                            '${weatherData.temperature}°C',
+                            // '${widget.weatherData.temperature}°C',
+                            '20 °C',
                             style: TextStyle(
                               fontSize: 32,
                               color: Colors.white,
@@ -94,7 +152,8 @@ class WeatherDetailsView extends StatelessWidget {
                               ),
                               SizedBox(width: 4),
                               Text(
-                                '${weatherData.humidity}%',
+                                '50 %',
+                                // '${widget.weatherData.humidity}%',
                                 style: TextStyle(
                                   color: Colors.white,
                                 ),
@@ -111,7 +170,8 @@ class WeatherDetailsView extends StatelessWidget {
                               ),
                               SizedBox(width: 4),
                               Text(
-                                '${weatherData.windspeed} km/h',
+                                // '${widget.weatherData.windspeed} km/h',
+                                '20 km/h',
                                 style: TextStyle(
                                   color: Colors.white,
                                 ),
@@ -174,84 +234,51 @@ class WeatherDetailsView extends StatelessWidget {
               ),
             ),
 
-            // 5-Day Forecast
-            Container(
-              padding: EdgeInsets.all(16),
-              margin: EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black12,
-                    blurRadius: 10,
-                  ),
-                ],
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    '5-Day Forecast',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  SizedBox(height: 16),
-                  SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: List.generate(
-                        5,
-                        (index) => Container(
-                          margin: EdgeInsets.only(right: 16),
-                          padding: EdgeInsets.all(16),
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.grey.shade300),
-                            borderRadius: BorderRadius.circular(12),
+            FutureBuilder<Map<String, dynamic>>(
+              future: weatherForecast,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                } else if (snapshot.hasError) {
+                  return Center(
+                    child: Text("Error: ${snapshot.error}"),
+                  );
+                } else if (snapshot.hasData) {
+                  final forecastList = snapshot.data!['list'] as List;
+
+                  return ListView.builder(
+                    itemCount: forecastList.length,
+                    itemBuilder: (context, index) {
+                      final forecast = forecastList[index];
+                      final dateTime = DateTime.parse(forecast['dt_txt']);
+                      final temperature = forecast['main']['temp'];
+                      final humidity = forecast['main']['humidity'];
+                      final description = forecast['weather'][0]['description'];
+                      final icon = forecast['weather'][0]['icon'];
+
+                      return Card(
+                        margin:
+                            EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                        child: ListTile(
+                          leading: Image.network(
+                              "http://openweathermap.org/img/wn/$icon@2x.png"),
+                          title: Text(
+                            "${dateTime.day}/${dateTime.month} ${dateTime.hour}:00",
                           ),
-                          child: Column(
-                            children: [
-                              Icon(
-                                Icons.cloud,
-                                color: Colors.grey,
-                                size: 32,
-                              ),
-                              SizedBox(height: 8),
-                              Text(
-                                '5°C',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              SizedBox(height: 4),
-                              Row(
-                                children: [
-                                  Icon(
-                                    Icons.water_drop,
-                                    color: Colors.grey,
-                                    size: 12,
-                                  ),
-                                  SizedBox(width: 4),
-                                  Text(
-                                    '12%',
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
+                          subtitle: Text(description),
+                          trailing: Column(children: [
+                            Text("${temperature.toStringAsFixed(1)}°C"),
+                            Text("${humidity.toStringAsFixed(1)} %"),
+                          ]),
                         ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+                      );
+                    },
+                  );
+                }
+                return Container();
+              },
             ),
           ],
         ),

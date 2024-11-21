@@ -3,6 +3,8 @@ import 'package:weather/services/services_service.dart';
 import 'package:lottie/lottie.dart';
 import '../models/weather.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import '../WeatherWidget.dart';
+import '../home_widget_helper.dart';
 
 class Weather_screen extends StatefulWidget {
   const Weather_screen({super.key});
@@ -12,44 +14,61 @@ class Weather_screen extends StatefulWidget {
 }
 
 class _WeatherPageState extends State<Weather_screen> {
-  // get api key
   final _weather_Service =
       weather_service(apiKey: "f2e5a934bf6e77754ad4c5c1521c0f96");
   Weather? _weatherData;
-  Weather? _weather;
+  bool _isLoading = false;
+  String? _error;
   TextEditingController _searchController = TextEditingController();
   bool _isLiked = false;
 
   Future<void> _fetchWeatherData(String cityName) async {
-    final weatherService =
-        weather_service(apiKey: 'f2e5a934bf6e77754ad4c5c1521c0f96');
-    Weather weather = await weatherService.get_weather(cityName, "metric");
     setState(() {
-      _weatherData = weather;
+      _isLoading = true;
+      _error = null;
     });
-  }
 
-  // fech weather
-
-  _fetchweather() async {
-    // get city name
-    String nameCity = await _weather_Service.get_Location();
-
-    // get weather of the city
     try {
-      final weather = await _weather_Service.get_weather(nameCity, "metric");
+      final weatherService =
+          weather_service(apiKey: 'f2e5a934bf6e77754ad4c5c1521c0f96');
+      Weather weather = await weatherService.get_weather(cityName, "metric");
       setState(() {
-        _weather = weather;
+        _weatherData = weather;
+        _isLoading = false;
       });
     } catch (e) {
+      setState(() {
+        _error = e.toString();
+        _isLoading = false;
+      });
+    }
+  }
+
+  _fetchweather() async {
+    setState(() {
+      _isLoading = true;
+      _error = null;
+    });
+
+    try {
+      String nameCity = await _weather_Service.get_Location();
+      final weather = await _weather_Service.get_weather(nameCity, "metric");
+      setState(() {
+        _weatherData = weather;
+        _isLoading = false;
+      });
+      updateWeatherWidget(weather);
+    } catch (e) {
+      setState(() {
+        _error = e.toString();
+        _isLoading = false;
+      });
       print(e);
     }
   }
 
-  // weather animation
-
   String getAnimationByCondition(String? condition) {
-    if (condition == null) return "assets/sun.json"; //Default to sunny
+    if (condition == null) return "assets/sun.json";
 
     switch (condition.toLowerCase()) {
       case "cloud":
@@ -74,7 +93,6 @@ class _WeatherPageState extends State<Weather_screen> {
   @override
   void initState() {
     super.initState();
-    // Fetch data on startup
     _fetchweather();
   }
 
@@ -95,6 +113,19 @@ class _WeatherPageState extends State<Weather_screen> {
     });
   }
 
+  // Convert your Weather model to WeatherModel
+  Weather _convertToWeatherModel(Weather weather) {
+    return Weather(
+      cityName: weather.cityName,
+      temperature: weather.temperature,
+      mainCondition: weather.mainCondition ?? "Unknown",
+      weatherIcon:
+          "01d", // You might need to map your conditions to OpenWeather icons
+      windspeed: weather.windspeed ?? 0.0,
+      humidity: weather.humidity ?? 0,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -109,68 +140,77 @@ class _WeatherPageState extends State<Weather_screen> {
             _fetchWeatherData(value);
           },
         ),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.refresh),
+            onPressed: _fetchweather,
+          ),
+        ],
       ),
-      body: Center(
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // City name
-            Text(_weather?.cityName ?? "Loading city .."),
+            if (_isLoading)
+              Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CircularProgressIndicator(),
+                    SizedBox(height: 16),
+                    Text("Loading weather data...")
+                  ],
+                ),
+              )
+            else if (_error != null)
+              Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.error_outline, size: 48, color: Colors.red),
+                    SizedBox(height: 16),
+                    Text(_error!, style: TextStyle(color: Colors.red)),
+                    ElevatedButton(
+                      onPressed: _fetchweather,
+                      child: Text("Retry"),
+                    )
+                  ],
+                ),
+              )
+            else if (_weatherData != null)
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      // Weather Widget
+                      WeatherWidget(
+                        weather: _convertToWeatherModel(_weatherData!),
+                      ),
+                      // SizedBox(height: 20),
+                      // // Lottie Animation
+                      // Lottie.asset(
+                      //   getAnimationByCondition(_weatherData?.mainCondition),
+                      //   height: 200,
+                      //   width: 200,
+                      // ),
 
-            // Animation
-
-            Lottie.asset(getAnimationByCondition(_weather?.mainCondition),
-                height: 200, width: 200),
-
-            // City name
-            Text('${_weather?.temperature.round()}°C' ??
-                "Loading Temperature .."),
-
-            Text(_weather?.mainCondition ?? "Loading Condition .."),
+                      // // Like Button
+                      // IconButton(
+                      //   icon: Icon(
+                      //       _isLiked ? Icons.favorite : Icons.favorite_border),
+                      //   onPressed: _toggleLike,
+                      //   color: _isLiked ? Colors.red : null,
+                      // ),
+                    ],
+                  ),
+                ),
+              )
+            else
+              Center(
+                child: Text("No weather data available"),
+              ),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _buildBottomSheet() {
-    return Container(
-      padding: EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(color: Colors.black26, blurRadius: 10),
-        ],
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            _weatherData?.cityName ?? "",
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-          ),
-          SizedBox(height: 8),
-          Text(
-            "${_weatherData?.temperature ?? ""}°C",
-            style: TextStyle(fontSize: 18),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              IconButton(
-                icon: Icon(_isLiked ? Icons.favorite : Icons.favorite_border),
-                onPressed: _toggleLike,
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  // Add additional functionality if needed
-                },
-                child: Text("Details"),
-              ),
-            ],
-          ),
-        ],
       ),
     );
   }

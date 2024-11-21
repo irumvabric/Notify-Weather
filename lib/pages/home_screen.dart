@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:weather/pages/Profile_Screen.dart';
+import 'package:weather/pages/details_screen.dart';
 import 'package:weather/pages/forecast_screen.dart';
 import 'package:weather/pages/login_screen.dart';
 import 'package:weather/pages/maps_screen.dart';
@@ -24,7 +25,7 @@ class _Home_ScreenState extends State<Home_Screen> {
   List _pages = [
     Weather_screen(),
     Map_Screen(),
-    Forecast_Screen(),
+    WeatherDetailsView(),
     Profile_Screen()
   ];
 

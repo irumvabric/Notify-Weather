@@ -60,6 +60,24 @@ class _MapScreenState extends State<Map_Screen> {
     });
   }
 
+  Future<void> _navigateToDetails() async {
+    if (_weatherData != null) {
+      final weatherService =
+          weather_service(apiKey: 'f2e5a934bf6e77754ad4c5c1521c0f96');
+      // final historicalData = await weatherService.getHistoricalData(
+      //     _currentPosition.latitude, _currentPosition.longitude, 7, "metric");
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => WeatherDetailsView(
+              // Replace with actual forecast data if needed
+              ),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -142,7 +160,7 @@ class _MapScreenState extends State<Map_Screen> {
                 onPressed: _toggleLike,
               ),
               ElevatedButton(
-                onPressed: () {},
+                onPressed: _navigateToDetails,
                 child: Text("Details"),
               ),
             ],
