@@ -1,4 +1,4 @@
-## Flutter Weather App
+9## Flutter Weather App
 
 ### Overview
 This project aims to create a comprehensive weather application using Flutter for the frontend and Django for the backend.
@@ -348,9 +348,6 @@ uses looked on it it will be a tendance and i will have to put it in a database 
 # 8. Backend pour la gestion des données météorologiques et des utilisateurs
 
 
-hjejejeie
 
-
-wjeiiei
 
 
