@@ -254,7 +254,7 @@ class WeatherHistory(models.Model):
 - Google Sign-In Client ID
 
 ### Running the Application
-```bash
+bash
 # Backend
 python manage.py migrate
 python manage.py runserver
