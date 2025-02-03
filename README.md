@@ -7,13 +7,13 @@ This project aims to create a comprehensive weather application using Flutter fo
 * **User authentication** with Google Sign-In
 * **Real-time weather data** from OpenWeatherMap
 * **Interactive map** using Google Maps
-* **Data storage** in MongoDB
+* **Data storage** in SqLite
 * **Customization** options for units and widgets
 * **History** of weather data
 
 ### Technology Stack
 * **Frontend:** Flutter, Dart
-* **Backend:** Django, Python, MongoDB
+* **Backend:** Django, Python, SqLite
 * **APIs:** OpenWeatherMap, Google Maps Geocoding API
 
 ### Project Structure
@@ -35,7 +35,7 @@ This project aims to create a comprehensive weather application using Flutter fo
 ### Development Steps
 1. **Set up Django backend:**
    * Create a Django project and app.
-   * Configure database (MongoDB).
+   * Configure database (SqLite).
    * Create models and serializers.
    * Define API endpoints.
 2. **Set up Flutter frontend:**
@@ -170,7 +170,7 @@ Parameters:
 - Location selection
 
 ### 4. Historical Weather Data
-#### MongoDB Schema
+#### SqLite Schema
 ```javascript
 {
   user_id: ObjectId,
@@ -240,7 +240,7 @@ class WeatherHistory(models.Model):
 - Flutter SDK
 - Python 3.8+
 - Django 4.0+
-- MongoDB
+- SqLite
 
 ### Environment Setup
 1. Clone the repository
@@ -326,8 +326,8 @@ link how to call it :
 
 uses looked on it it will be a tendance and i will have to put it in a database a temporaly one 
 
-[MongoDB with Django](https://www.youtube.com/watch?v=oUIjHQMBdD4) Or i can replace it with another one.
-[MongoDB with Django](https://www.djongomapper.com/integrating-django-with-mongodb/) Or Read this.
+[SqLite with Django](https://www.youtube.com/watch?v=oUIjHQMBdD4) Or i can replace it with another one.
+[SqLite with Django](https://www.djongomapper.com/integrating-django-with-SqLite/) Or Read this.
  
 # 5. Widgets personnalisables pour un accès rapide sur l’écran d’accueil
 
