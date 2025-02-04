@@ -271,7 +271,7 @@ The requirements are :
 
 Basic of flutter + Django 
 
-#### 1. Inscription avec vérification de l'adresse email et authentification des utilisateurs pour personnaliser l'expérience
+### 1. Inscription avec vérification de l'adresse email et authentification des utilisateurs pour personnaliser l'expérience
 
 => Utilisation de l'api de google pour verification de l'email    on  
 
@@ -305,7 +305,7 @@ link how to call it :
 
 [openweathermap.org/api/one-call-3](https://openweathermap.org/api/one-call-3#current)
 
-# 3. Carte météo interactive pour visualiser les conditions sur différentes régions
+### 3. Carte météo interactive pour visualiser les conditions sur différentes régions
 
 => Google maps to display the weather by region
 
@@ -318,7 +318,7 @@ link how to call it :
 
 [console.cloud.google](https://console.cloud.google.com/)
 
-# 4. Historique des données météo pour consulter les tendances passées
+### 4. Historique des données météo pour consulter les tendances passées
 
 => Django Modele and database for the users have  consulted : 
 
@@ -329,22 +329,22 @@ uses looked on it it will be a tendance and i will have to put it in a database 
 [SqLite with Django](https://www.youtube.com/watch?v=oUIjHQMBdD4) Or i can replace it with another one.
 [SqLite with Django](https://www.djongomapper.com/integrating-django-with-SqLite/) Or Read this.
  
-# 5. Widgets personnalisables pour un accès rapide sur l’écran d’accueil
+### 5. Widgets personnalisables pour un accès rapide sur l’écran d’accueil
 
 [home+widget+flutter](https://www.youtube.com/results?search_query=home+widget+flutter)
 
-# 6. Options de personnalisation pour choisir les unités de mesure (Celsius/Fahrenheit)
+### 6. Options de personnalisation pour choisir les unités de mesure (Celsius/Fahrenheit)
 
 => UI and Code
 
-# 6. Système de géolocalisation pour afficher automatiquement la météo de la position actuelle
+### 6. Système de géolocalisation pour afficher automatiquement la météo de la position actuelle
 
 => Include above
 
-# 8. Prévisions à long terme (jusqu'à 14 jours) avec des graphiques interactifs
+### 8. Prévisions à long terme (jusqu'à 14 jours) avec des graphiques interactifs
 
 => No api or pay , but i can generate random data for upcoming days
 
-# 8. Backend pour la gestion des données météorologiques et des utilisateurs
+### 8. Backend pour la gestion des données météorologiques et des utilisateurs
 
-
+# Great Experience
