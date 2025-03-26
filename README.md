@@ -336,6 +336,10 @@ uses looked on it it will be a tendance and i will have to put it in a database 
 ### 6. Options de personnalisation pour choisir les unités de mesure (Celsius/Fahrenheit)
 
 => UI and Code
+=> UI and Code
+=> UI and Code
+=> UI and Code
+=> UI and Code
 
 ### 6. Système de géolocalisation pour afficher automatiquement la météo de la position actuelle
 
